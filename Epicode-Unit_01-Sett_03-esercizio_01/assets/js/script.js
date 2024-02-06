@@ -102,7 +102,17 @@ const makeItClickable = function () {
     const el = document.getElementsByTagName("h1")[0];
 
     el.addEventListener('click', function () {
-        el.textContent = el.textContent.substring(0, el.textContent.length - 1);
+        //versione con substring
+        //el.textContent = el.textContent.substring(0, el.textContent.length - 1);
+
+        //versione con slice()
+        //el.innerText = el.innerText.slice(0, -1);
+
+        //versione con array
+        let scritta = el.textContent.split('');
+        scritta.pop();
+        scritta = scritta.join('');
+        el.innerText = scritta;
     });
 };
 makeItClickable();
@@ -115,7 +125,8 @@ const revealFooterLink = function () {
 
     const el = document.getElementsByTagName("footer")[0];
     el.addEventListener('click', function () {
-        let msg = document.querySelector('h3 > a').href;
+
+        let msg = document.querySelector('footer a').href;
         alert(msg);
     });
 };
@@ -128,53 +139,91 @@ revealFooterLink();
 
 const generateTable = function () {
 
+    // ARRAY PER LEGGERE LA BASE DATI E CREARE A CICLO LE RIGHE DELLA TABELLA
+    const immagini = [
+        'https://m.media-amazon.com/images/I/61ToKShnQvL.__AC_SY445_SX342_QL70_ML2_.jpg',
+        'https://m.media-amazon.com/images/I/61CVR4L6IDL._AC_SX679_.jpg',
+        'https://m.media-amazon.com/images/I/81WeAqaLe8L.__AC_SX300_SY300_QL70_ML2_.jpg',
+        'https://m.media-amazon.com/images/I/61CVR4L6IDL.__AC_SX300_SY300_QL70_ML2_.jpg',
+        'https://m.media-amazon.com/images/I/61stmTPwiLL.__AC_SX300_SY300_QL70_ML2_.jpg',
+    ];
+
+    //contenitore tabella
     let tableContainer = document.getElementById('tableArea');
 
+    //tabella
     let table = document.createElement('table');
 
-    let tr = [];
+    //riga
+    let tr = document.createElement('tr');
 
-    let td1 = document.createElement('td');
-    let td2 = document.createElement('td');
-    let td3 = document.createElement('td');
-    let td4 = document.createElement('td');
+    //intestazione
+    let thead = document.createElement('thead');
 
-    let text1 = document.createTextNode('immagine');
-    let text2 = document.createTextNode('nome prodotto');
-    let text3 = document.createTextNode('quantità');
-    let text4 = document.createTextNode('prezzo');
+    //celle intestazione
+    let idProgressivo = document.createElement('th');
+    idProgressivo.innerText = 'progressivo';
 
-    for (let i = 0; i < 3; i++) {
-        tr[i] = document.createElement('tr');
-        let td1 = document.createElement('td');
-        let td2 = document.createElement('td');
-        let td3 = document.createElement('td');
-        let td4 = document.createElement('td');
+    let idImmagineProdotto = document.createElement('th');
+    idImmagineProdotto.innerText = 'immagine';
 
-        let text1 = document.createTextNode('immagine');
-        let text2 = document.createTextNode('nome prodotto');
-        let text3 = document.createTextNode('quantità');
-        let text4 = document.createTextNode('prezzo');
+    let idNomeProdotto = document.createElement('th');
+    idNomeProdotto.innerText = 'prodotto';
 
-        for (let j = 0; j < 3; j++) {
+    let idQuantita = document.createElement('th');
+    idQuantita.innerText = 'quantità';
 
-            td1.appendChild(text1);
-            td2.appendChild(text2);
-            td3.appendChild(text3);
-            td4.appendChild(text4);
+    let idPrezzo = document.createElement('th');
+    idPrezzo.innerText = 'prezzo';
 
-            tr[i].appendChild(td1);
-            tr[i].appendChild(td2);
-            tr[i].appendChild(td3);
-            tr[i].appendChild(td4);
-        }
-        table.appendChild(tr[i]);
+    //append celle intestazione
+    tr.appendChild(idProgressivo);
+    tr.appendChild(idImmagineProdotto);
+    tr.appendChild(idNomeProdotto);
+    tr.appendChild(idQuantita);
+    tr.appendChild(idPrezzo);
+
+    //append riga intestazione
+    thead.appendChild(tr);
+
+    //append intestazione
+    table.appendChild(thead);
+
+
+    //crea tbody
+    let tbody = document.createElement('tbody');
+    table.appendChild(tbody);
+
+    for (let i = 0; i < immagini.length; i++) {
+
+        let riga = document.createElement('tr');
+
+        let idProgressivo = document.createElement('td');
+        idProgressivo.innerText = i + 1;
+
+        let idImmagineProdotto = document.createElement('td');
+        idImmagineProdotto.innerHTML = '<img src="' + immagini[i] + '">';
+
+        let idNomeProdotto = document.createElement('td');
+        idNomeProdotto.innerText = 'Tablet';
+
+        let idQuantita = document.createElement('td');
+        idQuantita.innerText = Math.floor(Math.random() * 25 + 1);
+
+        let idPrezzo = document.createElement('td');
+        idPrezzo.innerText = Math.floor(Math.random() * 250 + 50);
+
+        riga.appendChild(idProgressivo);
+        riga.appendChild(idImmagineProdotto);
+        riga.appendChild(idNomeProdotto);
+        riga.appendChild(idQuantita);
+        riga.appendChild(idPrezzo);
+
+        tbody.appendChild(riga);
     }
 
+    table.appendChild(tbody);
     tableContainer.appendChild(table);
-
-
-    a = 0;
 };
 generateTable();
 
@@ -183,36 +232,44 @@ generateTable();
  Crea una funzione che aggiunga una riga alla tabella precedentemente creata e fornisca i dati necessari come parametri
 */
 
-const addRow = function (row) {
+const addRow = function (imgSrc, nome, quantita, prezzo) {
 
+    //tabella
     let table = document.querySelector('table');
-    table.appendChild(tr1);
+
+    //crea riga
+    let tr = document.createElement('tr');
+
+    //crea celle
+    let idProgressivo = document.createElement('td');
+    let idImmagineProdotto = document.createElement('td');
+    let idNomeProdotto = document.createElement('td');
+    let idQuantita = document.createElement('td');
+    let idPrezzo = document.createElement('td');
+
+    //imposta valori celle
+    idProgressivo.innerText = '';
+    idImmagineProdotto.innerHTML = '<img src="' + imgSrc + '">';
+    idNomeProdotto.innerText = nome;
+    idQuantita.innerText = quantita;
+    idPrezzo.innerText = prezzo;
+
+    //append celle
+    tr.appendChild(idProgressivo);
+    tr.appendChild(idImmagineProdotto);
+    tr.appendChild(idNomeProdotto);
+    tr.appendChild(idQuantita);
+    tr.appendChild(idPrezzo);
+
+    //append riga
+    table.appendChild(tr);
 };
-
-
-//crea riga
-let td1 = document.createElement('td');
-let td2 = document.createElement('td');
-let td3 = document.createElement('td');
-let td4 = document.createElement('td');
-
-let text1 = document.createTextNode('immagine');
-let text2 = document.createTextNode('nome prodotto');
-let text3 = document.createTextNode('quantità');
-let text4 = document.createTextNode('prezzo');
-
-td1.appendChild(text1);
-td2.appendChild(text2);
-td3.appendChild(text3);
-td4.appendChild(text4);
-
-let tr1 = document.createElement('tr');
-
-tr1.appendChild(td1);
-tr1.appendChild(td2);
-tr1.appendChild(td3);
-tr1.appendChild(td4);
-addRow(tr1);
+addRow(
+    'https://m.media-amazon.com/images/I/61ToKShnQvL.__AC_SY445_SX342_QL70_ML2_.jpg',
+    'nome',
+    Math.floor(Math.random() * 26 + 1),
+    Math.floor(Math.random() * 249 + 1)
+);
 
 /* ESERCIZIO 14
 Crea una funzione che nasconda le immagini della tabella quando eseguita
@@ -220,18 +277,30 @@ Crea una funzione che nasconda le immagini della tabella quando eseguita
 
 const hideAllImages = function () {
 
-    let table = document.querySelector('table');
-
-    for (let i = 0; i < table.rows.length; i++) {
-        for (j = 0; j < table.rows[0].cells.length; i++) {
-            //table.rows[i].cells[j].innerText = '';
-        }
+    let images = document.querySelectorAll('table img');
+    for (let i = 0; i < images.length; i++) {
+        images[i].style.visibility = 'hidden';
     }
 };
-hideAllImages();
+//hideAllImages();
 
 /* EXTRA ESERCIZIO 15
 Crea una funzione che cambi il colore del h2 con id "changeMyColor" con un colore random ad ogni click ricevuto
 */
 
-const changeColorWithRandom = function () { };
+const changeColorWithRandom = function () {
+
+    let h2 = document.getElementById('changeMyColor');
+
+    h2.addEventListener('click', function () {
+
+        let r = Math.floor(Math.random() * 256);
+        let g = Math.floor(Math.random() * 256);
+        let b = Math.floor(Math.random() * 256);
+
+        console.log('rgb', r, g, b);
+        h2.style.color = 'rgb(' + r + ',' + g + ',' + b + ')';
+    });
+
+};
+changeColorWithRandom();
